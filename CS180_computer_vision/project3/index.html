@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Experiment Report</title>
+
+  <style>
+    .image-container {
+      display: flex;
+      justify-content: space-between;
+    }
+    
+    .image-container .image-wrapper {
+      position: relative;
+      width: 50%;
+    }
+    
+    .image-container .image-wrapper img {
+      max-width: 100%;
+      height: auto;
+    }
+    
+    .image-container .image-wrapper .text-overlay {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      color: white;
+      font-size: 24px;
+      font-weight: bold;
+      background-color: rgba(0, 0, 0, 0.7);
+      padding: 10px;
+    }
+
+    .image-container3 {
+      display: flex;
+      justify-content: space-between;
+    }
+    
+  .image-container3 .image-wrapper3 {
+      position: relative;
+      width: 33%;
+  }
+    
+  .image-container3 .image-wrapper3 img {
+      max-width: 100%;
+      height: auto;
+  }
+    
+  .image-container3 .image-wrapper3 .text-overlay3 {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      color: white;
+      font-size: 10px;
+      font-weight: bold;
+      background-color: rgba(0, 0, 0, 0.7);
+      padding: 10px;
+  }
+
+    .image-container4 {
+        display: flex;
+        justify-content: space-between;
+      }
+      
+    .image-container4 .image-wrapper4 {
+        position: relative;
+        width: 25%;
+    }
+      
+    .image-container4 .image-wrapper4 img {
+        max-width: 100%;
+        height: auto;
+    }
+      
+    .image-container4 .image-wrapper4 .text-overlay4 {
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        color: white;
+        font-size: 24px;
+        font-weight: bold;
+        background-color: rgba(0, 0, 0, 0.7);
+        padding: 10px;
+    }
+
+    .image-container5 {
+      display: flex;
+      justify-content: space-between;
+    }
+    
+  .image-container5 .image-wrapper5 {
+      position: relative;
+      width: 20%;
+  }
+    
+  .image-container5 .image-wrapper5 img {
+      max-width: 100%;
+      height: auto;
+  }
+    
+  .image-container5 .image-wrapper5 .text-overlay5 {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      color: white;
+      font-size: 24px;
+      font-weight: bold;
+      background-color: rgba(0, 0, 0, 0.7);
+      padding: 10px;
+  }
+
+    img.gif-image {
+        max-width: 88%;
+        height: auto;
+        display: block;
+        margin: 0 auto;
+    }
+
+  </style>
+
+</head>
+<body>
+  <h1>1.Info</h1>
+  <p>Experiment: Face Morphing</p>
+  <p>Name: Yuanteng Chen</p> 
+  <p>ID: 3039725444</p>
+
+  <h1>2.Experiment Report</h1>
+
+  <h2>2.0 Show original images of myself and the target</h2>
+
+  <div class="image-container">
+    <div class="image-wrapper">
+      <img src="data/self.png" alt="Self Image">
+      <div class="text-overlay">self</div>
+    </div>
+    
+    <div class="image-wrapper">
+      <img src="data/xiaohu.jpg" alt="Target Image">
+      <div class="text-overlay">target</div>
+    </div>
+  </div>
+
+  <h2>2.1 Facial Keypoints Selection and Triangulation Mesh Generation</h2>
+  <h3>2.1a Facial Keypoints Selection</h3>
+  <p>
+    Here, I adopted a combination of automatic and manual keypoint selection methods. <br>
+    <h4>Automatic part</h4>
+    Firstly, I used the dlib library in Python to obtain the initial 68 facial landmarks. <br>
+    Then, I automatically added 8 additional keypoints above the eyebrows <br>
+    (since the 68-point model of the dlib library does not detect points above the eyebrows). <br>
+    Finally, I added four points at the four corners of the facial image. <br>
+
+    <div class="image-container">
+        <div class="image-wrapper">
+          <img src="data/self_basic_points.jpg" alt="Self Image">
+          <div class="text-overlay">basic points of self</div>
+        </div>
+        
+        <div class="image-wrapper">
+          <img src="data/xiaohu_basic_points.jpg" alt="Target Image">
+          <div class="text-overlay">basic points of target</div>
+        </div>
+    </div>
+
+    <h4>Manual part</h4>
+    However, it was observed that these keypoints do not include the regions of the ears, hair, neck, and shoulders. <br>
+    Therefore, the cv2.setMouseCallback method was used to manually add keypoints in these areas. <br>
+    The resulting keypoints are as follows:
+
+    <div class="image-container">
+        <div class="image-wrapper">
+          <img src="data/self_points.jpg" alt="Self Image">
+          <div class="text-overlay">(basic + manual) points of self</div>
+        </div>
+        
+        <div class="image-wrapper">
+          <img src="data/xiaohu_points.jpg" alt="Target Image">
+          <div class="text-overlay">(basic + manual) points of target</div>
+        </div>
+    </div>
+
+  </p>
+
+  <h3>2.1b Triangulation Mesh Generation</h3>
+  <p>
+    I used the spatial.Delaunay method to obtain the following triangulation mesh: <br>
+    <div class="image-container">
+        <div class="image-wrapper">
+          <img src="data/self_tri_mesh.jpg" alt="Self Image">
+          <div class="text-overlay">Triangulation Mesh of self</div>
+        </div>
+        
+        <div class="image-wrapper">
+          <img src="data/xiaohu_tri_mesh.jpg" alt="Target Image">
+          <div class="text-overlay">Triangulation Mesh of target</div>
+        </div>
+    </div>
+  </p>
+
+  <h2>3. Affine Warp for Midway Face Generation</h2>
+  <p>
+    First, I calculated the intermediate (average) triangulation mesh based on the triangulation meshes of my own image and the target image. <br>
+    Then, I computed the affine transformation matrices from my own image to the intermediate result and from the target image to the intermediate result. <br>
+    The transformed results are displayed below: <br>
+  </p>
+
+  <div class="image-container4">
+    <div class="image-wrapper4">
+      <img src="data/self.png" alt="Self Image">
+      <div class="text-overlay4">self</div>
+    </div>
+    
+    <div class="image-wrapper4">
+      <img src="result/self_wrap_result.jpg" alt="Target Image">
+      <div class="text-overlay4">wrapped self</div>
+    </div>
+
+    <div class="image-wrapper4">
+        <img src="result/xiaohu_wrap_result.jpg" alt="Self Image">
+        <div class="text-overlay4">wrapped target</div>
+      </div>
+      
+      <div class="image-wrapper4">
+        <img src="data/xiaohu.jpg" alt="Target Image">
+        <div class="text-overlay4">target</div>
+      </div>
+  </div>
+
+  <h2>4. Morph Sequence Generation and GIF Display</h2>
+  <p>
+    Next, I captured 45 frames during the transformation process and <br>
+    created the following GIF to showcase the results:
+  </p>
+  <body>
+    <img src="result/result.gif" alt="result gif" class="gif-image">
+  </body>
+
+
+  <h2>5. Computation of Mean Face of a Specific Population</h2>
+  <p>
+    I use the <a href="https://fei.edu.br/~cet/facedatabase.html">FEI Face Database</a> to compute mean face: <br>
+    The dataset includes: (400 images of front faces in total) <br>
+    1. frontalimages_manuallyaligned_part1 <br>
+    2. frontalimages_manuallyaligned_part2 <br><br>
+
+    Here, I randomly display four facial photos from the dataset: <br>
+
+    <div class="image-container4">
+        <div class="image-wrapper4">
+          <img src="data/100a.jpg" alt="Self Image">
+          <div class="text-overlay4">face100a</div>
+        </div>
+        
+        <div class="image-wrapper4">
+          <img src="data/50a.jpg" alt="Target Image">
+          <div class="text-overlay4">face50a</div>
+        </div>
+    
+        <div class="image-wrapper4">
+            <img src="data/10b.jpg" alt="Self Image">
+            <div class="text-overlay4">face10b</div>
+          </div>
+          
+          <div class="image-wrapper4">
+            <img src="data/75b.jpg" alt="Target Image">
+            <div class="text-overlay4">face75b</div>
+          </div>
+      </div>
+
+    <br><br>Here I divide these 400 images into 2 parts (smile or not) and compute mean faces individualy <br><br>
+
+    <div class="image-container">
+        <div class="image-wrapper">
+          <img src="result/average_face_a.jpg" alt="Self Image">
+          <div class="text-overlay">Mean face of normal faces</div>
+        </div>
+        
+        <div class="image-wrapper">
+          <img src="result/average_face_b.jpg" alt="Target Image">
+          <div class="text-overlay">Mean face of smile faces</div>
+        </div>
+    </div>
+
+  </p>
+
+  <h2>6. Caricature Generation</h2>
+  <p>
+    Firstly, in order to better match my facial features, <br>
+    I have switched to an Asian face dataset to calculate the mean face. <br>
+    The Asian Face dataset is from <a href="https://www.seeprettyface.com/mydataset_page3.html#yellow">Yellow Face Dataset</a>
+    I sampled 2000 images from Asian Face dataset to compute the Mean Face.<br>
+    Here, I randomly display four facial photos from the dataset: <br>
+
+    <div class="image-container4">
+      <div class="image-wrapper4">
+        <img src="data/21.png" alt="Self Image">
+        <div class="text-overlay4">21</div>
+      </div>
+      
+      <div class="image-wrapper4">
+        <img src="data/103.png" alt="Target Image">
+        <div class="text-overlay4">103</div>
+      </div>
+  
+      <div class="image-wrapper4">
+          <img src="data/28.png" alt="Self Image">
+          <div class="text-overlay4">28</div>
+        </div>
+        
+        <div class="image-wrapper4">
+          <img src="data/226.png" alt="Target Image">
+          <div class="text-overlay4">226</div>
+        </div>
+    </div>
+  </p>
+
+
+  Mean Face of Asian Faces: <br><br>
+  <img src="result/yellow_average_face.jpg" alt="result gif" class="gif-image">
+  
+
+  <p>
+    The result of Caricature Generation (rate = 0,1,2,4,5,6): <br><br>
+  </p>
+
+    <div class="image-container5">
+      <div class="image-wrapper5">
+        <img src="result/Caricatures_0.jpg" alt="Self Image">
+        <div class="text-overlay5">origin</div>
+      </div>
+      
+      <div class="image-wrapper5">
+        <img src="result/Caricatures_1.jpg" alt="Target Image">
+        <div class="text-overlay5">rate=1</div>
+      </div>
+  
+      <div class="image-wrapper5">
+          <img src="result/Caricatures_2.jpg" alt="Self Image">
+          <div class="text-overlay5">rate=2</div>
+        </div>
+        
+        <div class="image-wrapper5">
+          <img src="result/Caricatures_3.jpg" alt="Target Image">
+          <div class="text-overlay5">rate=3</div>
+        </div>
+
+        <div class="image-wrapper5">
+          <img src="result/Caricatures_4.jpg" alt="Target Image">
+          <div class="text-overlay5">rate=4</div>
+        </div>
+
+    </div>
+
+  <h2>6. Additional Bells and Whistles</h2>
+  <p>
+    Change gender of my face: <br>
+    <br>
+    I downloaded the mean face image of Chinese female from website, warp both me
+    and mean face into middle shape and average the color, the result is shown below: <br>
+
+    <div class="image-container3">
+      <div class="image-wrapper3">
+        <img src="data/Part6.png" alt="Self Image">
+        <div class="text-overlay3">self</div>
+      </div>
+      
+      <div class="image-wrapper3">
+        <img src="result/changed_gender.jpg" alt="Target Image">
+        <div class="text-overlay3">gender_changed</div>
+      </div>
+  
+      <div class="image-wrapper3">
+          <img src="data/Asian_female.png" alt="Self Image">
+          <div class="text-overlay3">Chinese_female</div>
+        </div>
+        
+    </div>
+
+  </p>
+
+</body>
+</html>

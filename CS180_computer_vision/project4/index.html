@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Experiment Report</title>
+
+  <style>
+    .image-container {
+      display: flex;
+      justify-content: space-between;
+    }
+    
+    .image-container .image-wrapper {
+      position: relative;
+      width: 50%;
+    }
+    
+    .image-container .image-wrapper img {
+      max-width: 100%;
+      height: auto;
+    }
+    
+    .image-container .image-wrapper .text-overlay {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      color: white;
+      font-size: 24px;
+      font-weight: bold;
+      background-color: rgba(0, 0, 0, 0.7);
+      padding: 10px;
+    }
+
+    .image-container3 {
+      display: flex;
+      justify-content: space-between;
+    }
+    
+  .image-container3 .image-wrapper3 {
+      position: relative;
+      width: 33%;
+  }
+    
+  .image-container3 .image-wrapper3 img {
+      max-width: 100%;
+      height: auto;
+  }
+    
+  .image-container3 .image-wrapper3 .text-overlay3 {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      color: white;
+      font-size: 10px;
+      font-weight: bold;
+      background-color: rgba(0, 0, 0, 0.7);
+      padding: 10px;
+  }
+
+    .image-container4 {
+        display: flex;
+        justify-content: space-between;
+      }
+      
+    .image-container4 .image-wrapper4 {
+        position: relative;
+        width: 25%;
+    }
+      
+    .image-container4 .image-wrapper4 img {
+        max-width: 100%;
+        height: auto;
+    }
+      
+    .image-container4 .image-wrapper4 .text-overlay4 {
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        color: white;
+        font-size: 24px;
+        font-weight: bold;
+        background-color: rgba(0, 0, 0, 0.7);
+        padding: 10px;
+    }
+
+    .image-container5 {
+      display: flex;
+      justify-content: space-between;
+    }
+    
+  .image-container5 .image-wrapper5 {
+      position: relative;
+      width: 20%;
+  }
+    
+  .image-container5 .image-wrapper5 img {
+      max-width: 100%;
+      height: auto;
+  }
+    
+  .image-container5 .image-wrapper5 .text-overlay5 {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      color: white;
+      font-size: 24px;
+      font-weight: bold;
+      background-color: rgba(0, 0, 0, 0.7);
+      padding: 10px;
+  }
+
+    img.gif-image {
+        max-width: 88%;
+        height: auto;
+        display: block;
+        margin: 0 auto;
+    }
+
+  </style>
+
+</head>
+<body>
+  <p>Experiment: IMAGE WARPING and MOSAICING (part2)</p>
+  <p>Name: Yuanteng Chen</p> 
+  <p>ID: 3039725444</p>
+
+  <h1>1.Experiment Report</h1>
+
+  <h2>1.1 Show original images we want to do MOSAICING</h2>
+
+  <p>1</p>
+  <img src="data/5pic_a/1.JPG" alt=image1" width="300" height="200">
+
+  <p>2</p>
+  <img src="data/5pic_a/2.JPG" alt=image2" width="300" height="200">
+
+  <p>3</p>
+  <img src="data/5pic_a/3.JPG" alt=image3" width="300" height="200">
+
+  <p>4</p>
+  <img src="data/5pic_a/4.JPG" alt=image4" width="300" height="200">
+
+  <p>5</p>
+  <img src="data/5pic_a/5.JPG" alt=image5" width="300" height="200">
+
+  <!---
+  <div class="image-container5">
+    <div class="image-wrapper5">
+      <img src="data/5pic_a/1.jpg" alt="1 image">
+      <div class="text-overlay5">1</div>
+    </div>
+    
+    <div class="image-wrapper5">
+      <img src="data/5pic_a/2.jpg" alt="2 image">
+      <div class="text-overlay5">2</div>
+    </div>
+
+    <div class="image-wrapper5">
+      <img src="data/5pic_a/3.jpg" alt="3 image">
+      <div class="text-overlay5">3</div>
+    </div>
+
+    <div class="image-wrapper5">
+      <img src="data/5pic_a/4.jpg" alt="4 image">
+      <div class="text-overlay5">4</div>
+    </div>
+
+    <div class="image-wrapper5">
+      <img src="data/5pic_a/5.jpg" alt="5 image">
+      <div class="text-overlay5">5</div>
+    </div>
+  </div>
+  !-->
+
+  <h2>1.2 Harris Interest Point Detector (Section 2)</h2>
+
+  <div class="image-container5">
+    <div class="image-wrapper5">
+      <img src="mid_result/5pic_a/0_all_coords.jpg" alt="left image">
+      <div class="text-overlay5">1</div>
+    </div>
+    
+    <div class="image-wrapper5">
+      <img src="mid_result/5pic_a/1_all_coords.jpg" alt="left image">
+      <div class="text-overlay5">2</div>
+    </div>
+
+    <div class="image-wrapper5">
+      <img src="mid_result/5pic_a/2_all_coords.jpg" alt="left image">
+      <div class="text-overlay5">3</div>
+    </div>
+
+    <div class="image-wrapper5">
+      <img src="mid_result/5pic_a/3_all_coords.jpg" alt="left image">
+      <div class="text-overlay5">4</div>
+    </div>
+
+    <div class="image-wrapper5">
+      <img src="mid_result/5pic_a/4_all_coords.jpg" alt="left image">
+      <div class="text-overlay5">5</div>
+    </div>
+  </div>
+
+
+  <h2>2.3 Adaptive Non-Maximal Suppression (Section 3):</h2>
+  <p>
+    Set ANMS = 750, robust = 0.9. <br>
+    the following five tables show the process of <br>
+    corner point compression applied to five original images: <br><br>
+
+    <div class="image-container5">
+      <div class="image-wrapper5">
+        <img src="mid_result/5pic_a/0_ANMS.jpg" alt="1 image">
+        <div class="text-overlay5">1</div>
+      </div>
+      
+      <div class="image-wrapper5">
+        <img src="mid_result/5pic_a/1_ANMS.jpg" alt="2 image">
+        <div class="text-overlay5">2</div>
+      </div>
+  
+      <div class="image-wrapper5">
+        <img src="mid_result/5pic_a/2_ANMS.jpg" alt="3 image">
+        <div class="text-overlay5">3</div>
+      </div>
+  
+      <div class="image-wrapper5">
+        <img src="mid_result/5pic_a/3_ANMS.jpg" alt="4 image">
+        <div class="text-overlay5">4</div>
+      </div>
+  
+      <div class="image-wrapper5">
+        <img src="mid_result/5pic_a/4_ANMS.jpg" alt="5 image">
+        <div class="text-overlay5">5</div>
+      </div>
+    </div>
+
+    <br>Using Adaptive Non-Maximal Suppression, <br>
+    the selected coords in 5 images are shown: <br><br>
+
+    <div class="image-container5">
+      <div class="image-wrapper5">
+        <img src="mid_result/5pic_a/0_selected_coords.jpg" alt="1 image">
+        <div class="text-overlay5">1</div>
+      </div>
+      
+      <div class="image-wrapper5">
+        <img src="mid_result/5pic_a/1_selected_coords.jpg" alt="2 image">
+        <div class="text-overlay5">2</div>
+      </div>
+  
+      <div class="image-wrapper5">
+        <img src="mid_result/5pic_a/2_selected_coords.jpg" alt="3 image">
+        <div class="text-overlay5">3</div>
+      </div>
+  
+      <div class="image-wrapper5">
+        <img src="mid_result/5pic_a/3_selected_coords.jpg" alt="4 image">
+        <div class="text-overlay5">4</div>
+      </div>
+  
+      <div class="image-wrapper5">
+        <img src="mid_result/5pic_a/4_selected_coords.jpg" alt="5 image">
+        <div class="text-overlay5">5</div>
+      </div>
+    </div>    
+
+  </p>
+
+  <h2>2.4 Feature Descriptor extraction (Section 4)</h2>
+
+  For each selected corner point, we take a 40x40 region <br>
+  centered around it. We then sample every fifth pixel in the region <br> 
+  to achieve a final patch size of 8x8. <br>
+  The resulting 8x8 patch is flattened and normalized to serve as the descriptor for that corner point. <br>
+  Here I show two 8x8 descriptors as example: <br>
+
+  <img src="page_images/descriptor.png" alt=bilinear" width="600" height="400">
+
+
+  <h2>2.5 Feature Matching (Section 5)</h2>
+  <p>
+    Set threshold of (best_match_distance / suboptimal_match_distance) = 0.75, <br>
+    We got matched points pair between image 1 and 2, 2 and 3, 3 and 4 , 4 and 5. <br>
+    I connect matched points pairs between two images using blue line: <br><br>
+
+    image1 and image2: <br>
+    <img src="mid_result/5pic_a//0_1_pairs.jpg" alt=bilinear" width="1000" height="400">
+
+    <br><br>image2 and image3: <br>
+    <img src="mid_result/5pic_a//1_2_pairs.jpg" alt=bilinear" width="1000" height="400">
+
+    <br><br>image3 and image4: <br>
+    <img src="mid_result/5pic_a//2_3_pairs.jpg" alt=bilinear" width="1000" height="400">
+
+    <br><br>image4 and image5: <br>
+    <img src="mid_result/5pic_a//3_4_pairs.jpg" alt=bilinear" width="1000" height="400">
+
+  </p>
+
+  <h2>2.6 RANSAC</h2>
+  Hyperparameters of RANSAC: <br>
+  num_pts_per_sample = 4, <br>
+  percentage_of_outliers = 0.6, <br>
+  threshold = 3. <br><br>
+  Here, I will use a chart to illustrate the process of applying the RANSAC algorithm, <br>
+  where the number of inliers is the sum of the sample size and the number of inliers. <br>
+
+  <br><br>RANSAC between image1 and image2: <br>
+  <img src="mid_result/5pic_a/0_1_RANSAC.jpg" alt=bilinear" width="800" height="500">
+
+  <br><br>RANSAC between image2 and image3: <br>
+  <img src="mid_result/5pic_a/1_2_RANSAC.jpg" alt=bilinear" width="800" height="500">
+
+  <br><br>RANSAC between image3 and image4: <br>
+  <img src="mid_result/5pic_a/2_3_RANSAC.jpg" alt=bilinear" width="800" height="500">
+
+  <br><br>RANSAC between image4 and image5: <br>
+  <img src="mid_result/5pic_a/3_4_RANSAC.jpg" alt=bilinear" width="800" height="500">
+
+  <h2>2.7 MOSAICING result</h2>
+  <h3>2.7.1 results of the images processed above.</h3>
+  The other parts related to mosaicing have been introduces in part 1, <br>
+  so they will not be repeated here. Let's directly display the final result: <br><br>
+
+  <img src="final_result/5pic_a/MOP_4.JPG" alt=result" width="1600" height="1000">
+
+  <br><br>
+  Here I also display the result of using high API cv2.xfeatures2d.SIFT_create: <br><br>
+  <img src="final_result/5pic_a/SIFT_4.JPG" alt=result" width="1600" height="1000">
+
+  <br><br>
+  Compare my result with Opencv's result: <br>
+  the differences can be seen within an acceptable range.<br><br>
+  <div class="image-container">
+    <div class="image-wrapper">
+      <img src="final_result/5pic_a/MOP_4.JPG" alt="self image">
+      <div class="text-overlay">self_result</div>
+    </div>
+    
+    <div class="image-wrapper">
+      <img src="final_result/5pic_a/SIFT_4.JPG" alt="cv2 image">
+      <div class="text-overlay">cv2_result</div>
+    </div>
+  </div>
+
+  <h3>2.7.2 other results of mosaic I want to show</h3>
+
+  <h4>(1): view from foothill: </h4>
+
+  Raw images: <br><br>
+
+  <p>1</p>
+  <img src="data/5pic_b/1.JPG" alt=image1" width="400" height="270">
+
+  <p>2</p>
+  <img src="data/5pic_b/2.JPG" alt=image2" width="400" height="270">
+
+  <p>3</p>
+  <img src="data/5pic_b/3.JPG" alt=image3" width="400" height="270">
+
+  <p>4</p>
+  <img src="data/5pic_b/4.JPG" alt=image4" width="400" height="270">
+
+  <p>5</p>
+  <img src="data/5pic_b/5.JPG" alt=image5" width="400" height="270">
+
+  <!--
+  <div class="image-container5">
+    <div class="image-wrapper5">
+      <img src="data/5pic_b/1.jpg" alt="left image">
+      <div class="text-overlay5">1</div>
+    </div>
+    
+    <div class="image-wrapper5">
+      <img src="data/5pic_b/2.jpg" alt="left image">
+      <div class="text-overlay5">2</div>
+    </div>
+
+    <div class="image-wrapper5">
+      <img src="data/5pic_b/3.jpg" alt="left image">
+      <div class="text-overlay5">3</div>
+    </div>
+
+    <div class="image-wrapper5">
+      <img src="data/5pic_b/4.jpg" alt="left image">
+      <div class="text-overlay5">4</div>
+    </div>
+
+    <div class="image-wrapper5">
+      <img src="data/5pic_b/5.jpg" alt="left image">
+      <div class="text-overlay5">5</div>
+    </div>
+  </div>
+  !-->
+
+  <br><br>mosaic result: <br><br>
+  <img src="final_result/5pic_b/MOP_4.JPG" alt=result" width="1600" height="1000">
+
+  <br><br>
+  Compare my result with Opencv's result: <br><br>
+  <div class="image-container">
+    <div class="image-wrapper">
+      <img src="final_result/5pic_b/MOP_4.JPG" alt="self image">
+      <div class="text-overlay">self_result</div>
+    </div>
+    
+    <div class="image-wrapper">
+      <img src="final_result/5pic_b/SIFT_4.JPG" alt="cv2 image">
+      <div class="text-overlay">cv2_result</div>
+    </div>
+  </div>
+
+  <h4>(2): Long business library (where I finished the report): </h4>
+
+  Raw images: <br><br>
+
+  <p>1</p>
+  <img src="data/3pic/1.JPG" alt=image1" width="400" height="270">
+
+  <p>2</p>
+  <img src="data/3pic/2.JPG" alt=image2" width="400" height="270">
+
+  <p>3</p>
+  <img src="data/3pic/3.JPG" alt=image3" width="400" height="270">
+
+  <!--
+  <div class="image-container3">
+    <div class="image-wrapper3">
+      <img src="data/3pic/1.jpg" alt="left image">
+      <div class="text-overlay3">1</div>
+    </div>
+    
+    <div class="image-wrapper3">
+      <img src="data/3pic/2.jpg" alt="left image">
+      <div class="text-overlay3">2</div>
+    </div>
+
+    <div class="image-wrapper3">
+      <img src="data/3pic/3.jpg" alt="left image">
+      <div class="text-overlay3">3</div>
+    </div>
+  </div>
+  !-->
+
+  <br><br>mosaic result: <br><br>
+  <img src="final_result/3pic/MOP_2.JPG" alt=result" width="1600" height="1000">
+
+  <br><br>
+  Compare my result with Opencv's result: <br><br>
+  <div class="image-container">
+    <div class="image-wrapper">
+      <img src="final_result/3pic/MOP_2.JPG" alt="self image">
+      <div class="text-overlay">self_result</div>
+    </div>
+    
+    <div class="image-wrapper">
+      <img src="final_result/3pic/SIFT_2.JPG" alt="cv2 image">
+      <div class="text-overlay">cv2_result</div>
+    </div>
+  </div>
+
+  <h2>2.8 Coolest thing you have learned</h2>
+  <div style="background-color: #FFFFCC; padding: 10px;">
+  The coolest thing I learned from this project is the step-by-step replication of algorithms from research papers and achieving results that are quite close. <br>
+  In this part 2, we reproduced most of the steps from the paper 'Multi-Image Matching using Multi-Scale Oriented Patches' <br>
+  — including the Harris Interest Point Detector, Adaptive Non-Maximal Suppression, Feature Descriptor extraction, 
+  Feature Matching, and even the subsequent implementation of the RANSAC algorithm. <br><br>
+  I believe this significantly boosted my confidence for future learning endeavors!
+</div>
+
+</body>
+</html>

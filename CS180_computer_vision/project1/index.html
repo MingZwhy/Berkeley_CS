@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html>
+
+<style>
+    .small-image {
+        max-width: 1000px; 
+        max-height: 500px; 
+    }
+
+    .mid_image {
+        max-width: 1000px; 
+        max-height: 800px;
+    }
+
+    .image-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        grid-gap: 10px;
+        max-width: 800px;
+        margin: 0 auto;
+    }
+
+    .image-grid img {
+        width: 100%;
+        height: auto;
+        object-fit: cover;
+    }
+
+    .image-grid .caption {
+        text-align: center;
+        font-size: 24px;
+        font-weight: bold;
+    }
+    
+    .my-text {
+        font-size: 32px;
+    }
+</style>
+
+</style>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Experiment Report</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+
+        h1 {
+            color: #333;
+        }
+
+        h2 {
+            color: #666;
+            margin-bottom: 10px;
+        }
+
+        h3 {
+            color: #999;
+            margin-bottom: 5px;
+        }
+
+        p {
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Project1 Report: Russian Empire</h1>
+
+    <h2>0. Student Information</h2>
+    <p>
+        Name: Yuanteng Chen <br>
+        Cal ID: 3039725444
+    </p>
+
+    <h2>1. Environment Setup</h2>
+    <p>
+        In experiment, I use Python 3.7 and OpenCV 4.5.1 for image processing: <br>
+        <code style="font-size: 20px;">pip install opencv-python</code>
+    </p>
+
+    <h2>2. Image Processing Methods</h2>
+    <h3>2.1 Image Preprocessing</h3>
+    <h4>2.1.1 Image normalization</h4>
+    <p>
+        First, I mapped the value of the image from (0,255) to between (0,1) for convenience of calculation. <br>
+        And after finishing alignment, denormalization is necessary otherwise we will see totally black image
+        as results.
+
+    </p>
+    <h4>2.1.2 Split the raw image</h4>
+    <p>
+        As the raw .tif image is stack in height dimension, I split it into three slices in height dimension. <br>
+        (blue , green, red)
+    </p>
+    <h4>2.1.3 Crop three channels in same rate</h4>
+    <p>
+        Because we can observe noticeable black shadows around the image, 
+        which affect our judgment of the alignment result, 
+        here I made the same crop of the image for all three channels. <br>
+        In code, I set the default crop rate as 2.5%.
+    </p>
+
+    <h3>2.2 Basic Alignment Methods</h3>
+    <p>
+        In order to explore basic alignment methods, I set cathedral.jpg as an example because of its low resolution. <br >
+        In this part, I tried three metrics in same window_size(20): <br>
+        1: Sum of Squared Differences (SSD) <br>
+        2: Normalized Cross-Correlation (NCC) <br>
+        3: Gradient of images <br>
+        <pre>
+        <code>
+    def Gradients_metric(img1, img2):
+        # compute the gradient 
+        gradient_img1 = cv2.Sobel(img1, cv2.CV_32FC1, 1, 1, ksize=3)
+        gradient_img2 = cv2.Sobel(img2, cv2.CV_32FC1, 1, 1, ksize=3)
+                
+        # compute the difference
+        diff = cv2.absdiff(gradient_img1, gradient_img2)
+                
+        # average difference
+        mean_diff = np.mean(diff)
+                
+        return mean_diff
+        </code>
+
+    Code explanation: <br>
+    This code calculates the similarity between two images using gradients: <br>
+    (1)The cv2.Sobel function is used to compute the gradient images of img1 and img2. <br>
+        The gradient represents the rate of change of pixel intensities in the image. <br>
+        The function calculates the first-order derivatives of the images in the x and y 
+        directions using the Sobel operator.<br> 
+    (2)Using cv2.absdiff to measure the difference between the two images in terms of their gradients.<br>
+    (3)Average discrepancy is calculated by taking the mean of all the pixel differences in the diff image. <br>
+        This value represents the average dissimilarity between the gradients of the two input images.<br>
+            
+        </pre>
+        To evaluate the aligned result, I download the The alignment results given by the official website as SOTA.<br>
+        <a href="https://tile.loc.gov/storage-services/service/pnp/prokc/20300/20363v.jpg">alignment results given by the official website</a> <br><br>
+        The best evaluation criterion yields the closest alignment result to SOTA. <br>
+        At the same time, I used psnr as an indicator to assess the similarity between my results and SOTA.<br>
+        PSNR = 20 * log<sub>10</sub>(MAX) - 10 * log<sub>10</sub>(MSE) <br>
+        (higher PSNR -- better result)<br><br>
+
+        Result comparision:<br><br>
+        1.result of SSD:
+        <img src="other_images/SSD_psnr.png" alt="psnr of SSD" class="small-image"> <br><br>
+
+        2.result of NCC:
+        <img src="other_images/NCC_psnr.png" alt="psnr of NCC" class="small-image"> <br><br>
+
+        3.result of Gradient:
+        <img src="other_images/Gradient_psnr.png" alt="psnr of Gradient" class="small-image"> <br><br>
+
+        As can be seen from the above results: <br>
+        11.273 = 11.273 > 11.178 <br>
+        The results of SSD and NCC are same and better than that of Gradient.<br><br>
+        <strong>Based on this comparision, we still use SSD as metric in the follow-up experiments</strong>
+    </p>
+
+    <h3>2.3 Image Pyramids</h3>
+    <pre>
+    <code>
+    def image_pyramid(img1, img2, window_size=15, level = 3, metric=1):
+        #param level: level of pyramid
+        
+        c_img1 = copy.deepcopy(img1)
+        c_img2 = copy.deepcopy(img2)
+        
+        origin_size = c_img1.shape
+        best_displacement = (0,0)
+        
+        for i in range(level):
+            rate = 2 ** (level-i-1)
+            w_size = window_size // (2 ** i)
+            if(rate == 1):
+                d_img1 = c_img1
+                d_img2 = c_img2
+            else:
+                d_img1 = cv2.resize(c_img1, (origin_size[1] // rate, origin_size[0] // rate))
+                d_img2 = cv2.resize(c_img2, (origin_size[1] // rate, origin_size[0] // rate))
+        
+            _, best_displacement = find_best_align(d_img1, d_img2, \
+                window_size=w_size, center=best_displacement, metric=metric)
+        
+        best_align = trans_pic(c_img2, best_displacement[0], best_displacement[1])
+        
+        return best_align, best_displacement
+    </code>
+    </pre> <br>
+
+    <p>Code explanation: </p> <br>
+
+    <img src="other_images/image_pyramid.png" alt="image pyramid" class="mid_image"> <br><br>
+
+    <h2>3. Results Presentation</h2>
+
+    <br><strong>In final test, I set window_size = 32 and level of pyramid = 4</strong> <br>
+    <p class="my-text">Why the images of baseline and SSD can't be displayed normally?</p>
+    <strong>
+        <br>!!!Since gradescope's commit file size is limited to 100MB, I can't upload base_line and SSD results, <br>
+        so only Gradient results are in the result folder and index.html. After putting raw images into "data/" and running the command: <br>
+        python main.py --algorithm SSD --run_mode auto --base_line True <br>
+        you can get all results and the web page can display the results of the first two columns normally.!!! <br><br><br>
+    </strong>
+
+    <div class="image-grid">
+        <div>
+            <div class="caption">baseline</div>
+            <img src="result/cathedral_baseline.jpg" alt="baseline">
+        </div>
+        <div>
+            <div class="caption">SSD</div>
+            <img src="result/cathedral_SSD_align.jpg" alt="SSD">
+        </div>
+        <div>
+            <div class="caption">Gradient</div>
+            <img src="result/cathedral_Gradient_align.jpg" alt="Gradient">
+        </div>
+    </div>
+
+    <div class="image-grid">
+        <div>
+            <div class="caption">baseline</div>
+            <img src="result/church_baseline.jpg" alt="baseline">
+        </div>
+        <div>
+            <div class="caption">SSD</div>
+            <img src="result/church_SSD_align.jpg" alt="SSD">
+        </div>
+        <div>
+            <div class="caption">Gradient</div>
+            <img src="result/church_Gradient_align.jpg" alt="Gradient">
+        </div>
+    </div>
+
+    <div class="image-grid">
+        <div>
+            <div class="caption">baseline</div>
+            <img src="result/emir_baseline.jpg" alt="baseline">
+        </div>
+        <div>
+            <div class="caption">SSD</div>
+            <img src="result/emir_SSD_align.jpg" alt="SSD">
+        </div>
+        <div>
+            <div class="caption">Gradient</div>
+            <img src="result/emir_Gradient_align.jpg" alt="Gradient">
+        </div>
+    </div>
+
+    <div class="image-grid">
+        <div>
+            <div class="caption">baseline</div>
+            <img src="result/harvesters_baseline.jpg" alt="baseline">
+        </div>
+        <div>
+            <div class="caption">SSD</div>
+            <img src="result/harvesters_SSD_align.jpg" alt="SSD">
+        </div>
+        <div>
+            <div class="caption">Gradient</div>
+            <img src="result/harvesters_Gradient_align.jpg" alt="Gradient">
+        </div>
+    </div>
+
+    <div class="image-grid">
+        <div>
+            <div class="caption">baseline</div>
+            <img src="result/icon_baseline.jpg" alt="baseline">
+        </div>
+        <div>
+            <div class="caption">SSD</div>
+            <img src="result/icon_SSD_align.jpg" alt="SSD">
+        </div>
+        <div>
+            <div class="caption">Gradient</div>
+            <img src="result/icon_Gradient_align.jpg" alt="Gradient">
+        </div>
+    </div>
+
+    <div class="image-grid">
+        <div>
+            <div class="caption">baseline</div>
+            <img src="result/lady_baseline.jpg" alt="baseline">
+        </div>
+        <div>
+            <div class="caption">SSD</div>
+            <img src="result/lady_SSD_align.jpg" alt="SSD">
+        </div>
+        <div>
+            <div class="caption">Gradient</div>
+            <img src="result/lady_Gradient_align.jpg" alt="Gradient">
+        </div>
+    </div>
+
+    <div class="image-grid">
+        <div>
+            <div class="caption">baseline</div>
+            <img src="result/melons_baseline.jpg" alt="baseline">
+        </div>
+        <div>
+            <div class="caption">SSD</div>
+            <img src="result/melons_SSD_align.jpg" alt="SSD">
+        </div>
+        <div>
+            <div class="caption">Gradient</div>
+            <img src="result/melons_Gradient_align.jpg" alt="Gradient">
+        </div>
+    </div>
+
+    <div class="image-grid">
+        <div>
+            <div class="caption">baseline</div>
+            <img src="result/monastery_baseline.jpg" alt="baseline">
+        </div>
+        <div>
+            <div class="caption">SSD</div>
+            <img src="result/monastery_SSD_align.jpg" alt="SSD">
+        </div>
+        <div>
+            <div class="caption">Gradient</div>
+            <img src="result/monastery_Gradient_align.jpg" alt="Gradient">
+        </div>
+    </div>
+
+    <div class="image-grid">
+        <div>
+            <div class="caption">baseline</div>
+            <img src="result/onion_church_baseline.jpg" alt="baseline">
+        </div>
+        <div>
+            <div class="caption">SSD</div>
+            <img src="result/onion_church_SSD_align.jpg" alt="SSD">
+        </div>
+        <div>
+            <div class="caption">Gradient</div>
+            <img src="result/onion_church_Gradient_align.jpg" alt="Gradient">
+        </div>
+    </div>
+
+    <div class="image-grid">
+        <div>
+            <div class="caption">baseline</div>
+            <img src="result/sculpture_baseline.jpg" alt="baseline">
+        </div>
+        <div>
+            <div class="caption">SSD</div>
+            <img src="result/sculpture_SSD_align.jpg" alt="SSD">
+        </div>
+        <div>
+            <div class="caption">Gradient</div>
+            <img src="result/sculpture_Gradient_align.jpg" alt="Gradient">
+        </div>
+    </div>
+
+    <div class="image-grid">
+        <div>
+            <div class="caption">baseline</div>
+            <img src="result/self_portrait_baseline.jpg" alt="baseline">
+        </div>
+        <div>
+            <div class="caption">SSD</div>
+            <img src="result/self_portrait_SSD_align.jpg" alt="SSD">
+        </div>
+        <div>
+            <div class="caption">Gradient</div>
+            <img src="result/self_portrait_Gradient_align.jpg" alt="Gradient">
+        </div>
+    </div>
+
+    <div class="image-grid">
+        <div>
+            <div class="caption">baseline</div>
+            <img src="result/three_generations_baseline.jpg" alt="baseline">
+        </div>
+        <div>
+            <div class="caption">SSD</div>
+            <img src="result/three_generations_SSD_align.jpg" alt="SSD">
+        </div>
+        <div>
+            <div class="caption">Gradient</div>
+            <img src="result/three_generations_Gradient_align.jpg" alt="Gradient">
+        </div>
+    </div>
+
+    <div class="image-grid">
+        <div>
+            <div class="caption">baseline</div>
+            <img src="result/tobolsk_baseline.jpg" alt="baseline">
+        </div>
+        <div>
+            <div class="caption">SSD</div>
+            <img src="result/tobolsk_SSD_align.jpg" alt="SSD">
+        </div>
+        <div>
+            <div class="caption">Gradient</div>
+            <img src="result/tobolsk_Gradient_align.jpg" alt="Gradient">
+        </div>
+    </div>
+
+    <div class="image-grid">
+        <div>
+            <div class="caption">baseline</div>
+            <img src="result/train_baseline.jpg" alt="baseline">
+        </div>
+        <div>
+            <div class="caption">SSD</div>
+            <img src="result/train_SSD_align.jpg" alt="SSD">
+        </div>
+        <div>
+            <div class="caption">Gradient</div>
+            <img src="result/train_Gradient_align.jpg" alt="Gradient">
+        </div>
+    </div>
+
+</body>
+
+</html>

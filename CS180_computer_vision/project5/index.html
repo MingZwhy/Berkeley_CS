@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Experiment Report</title>
+
+  <style>
+    .image-container {
+      display: flex;
+      justify-content: space-between;
+    }
+    
+    .image-container .image-wrapper {
+      position: relative;
+      width: 50%;
+    }
+    
+    .image-container .image-wrapper img {
+      max-width: 100%;
+      height: auto;
+    }
+    
+    .image-container .image-wrapper .text-overlay {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      color: white;
+      font-size: 24px;
+      font-weight: bold;
+      background-color: rgba(0, 0, 0, 0.7);
+      padding: 10px;
+    }
+
+    .image-container3 {
+      display: flex;
+      justify-content: space-between;
+    }
+    
+  .image-container3 .image-wrapper3 {
+      position: relative;
+      width: 33%;
+  }
+    
+  .image-container3 .image-wrapper3 img {
+      max-width: 100%;
+      height: auto;
+  }
+    
+  .image-container3 .image-wrapper3 .text-overlay3 {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      color: white;
+      font-size: 10px;
+      font-weight: bold;
+      background-color: rgba(0, 0, 0, 0.7);
+      padding: 10px;
+  }
+
+    .image-container4 {
+        display: flex;
+        justify-content: space-between;
+      }
+      
+    .image-container4 .image-wrapper4 {
+        position: relative;
+        width: 25%;
+    }
+      
+    .image-container4 .image-wrapper4 img {
+        max-width: 100%;
+        height: auto;
+    }
+      
+    .image-container4 .image-wrapper4 .text-overlay4 {
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        color: white;
+        font-size: 24px;
+        font-weight: bold;
+        background-color: rgba(0, 0, 0, 0.7);
+        padding: 10px;
+    }
+
+    .image-container5 {
+      display: flex;
+      justify-content: space-between;
+    }
+    
+  .image-container5 .image-wrapper5 {
+      position: relative;
+      width: 20%;
+  }
+    
+  .image-container5 .image-wrapper5 img {
+      max-width: 100%;
+      height: auto;
+  }
+    
+  .image-container5 .image-wrapper5 .text-overlay5 {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      color: white;
+      font-size: 14px;
+      font-weight: bold;
+      background-color: rgba(0, 0, 0, 0.7);
+      padding: 10px;
+  }
+
+    img.gif-image {
+        max-width: 88%;
+        height: auto;
+        display: block;
+        margin: 0 auto;
+    }
+
+  </style>
+
+</head>
+<body>
+  <p>Experiment: Neural Radiance Field</p>
+  <p>Name: Yuanteng Chen</p> 
+  <p>ID: 3039725444</p>
+
+  <h1>1.Experiment Report</h1>
+
+  <h2>Part1: Fit a Neural Field to a 2D Image</h2>
+  <h3>1.1 Build the Network</h3>
+  Here I use torchsummary to check to MLP model: <br><br>
+  <img src="images/report/MLP.png" alt="MLP" width="600" height="400">
+
+  <h3>1.2 Hyperparameters Chosen for Training</h3>
+  <img src="images/report/hyper.png" alt="hyper" width="600" height="400">
+  <br>
+  (1) learning_rate: 0.01 <br>
+  (2) batch_size: 10k <br>
+  (3) loss_fn: MSE    <br>
+  (4) optimizer: Adam <br>
+  (5) scheduler: ReduceLROnPlateau <br>
+  (6) val metrics: PSNR <br>
+
+  <h3>1.3 Train processing</h3>
+  Train the MLP in 50 epochs: <br>
+  (1) train loss in iterations: <br>
+  <img src="images/report/part1_fox_train_iter.png" alt="train_iter" width="800" height="400">
+  <br>
+  (2) train and val loss in epochs: <br>
+  <div class="image-container">
+    <div class="image-wrapper">
+      <img src="images/report/train_loss_epoch.png" alt="self image">
+    </div>
+    
+    <div class="image-wrapper">
+      <img src="images/report/test_loss_epoch.png" alt="cv2 image">
+    </div>
+  </div>
+  <br>
+  (3) PSNR (compute PSNR in whole image) <br>
+  <img src="images/report/part1_psnr.png" alt="train_iter" width="800" height="400">
+
+  <h3>1.4 Show results:</h3>
+  Here I show the reconstruct result after epoch1,2,3,4 and 50(final results):<br>
+  <div class="image-container5">
+    <div class="image-wrapper5">
+      <img src="results/part1/fox_0.01_50_mse_mse_plateau/1.jpg" alt="left image">
+      <div class="text-overlay5">epoch 1</div>
+    </div>
+    
+    <div class="image-wrapper5">
+      <img src="results/part1/fox_0.01_50_mse_mse_plateau/2.jpg" alt="left image">
+      <div class="text-overlay5">epoch 2</div>
+    </div>
+
+    <div class="image-wrapper5">
+      <img src="results/part1/fox_0.01_50_mse_mse_plateau/3.jpg" alt="left image">
+      <div class="text-overlay5">epoch 3</div>
+    </div>
+
+    <div class="image-wrapper5">
+      <img src="results/part1/fox_0.01_50_mse_mse_plateau/5.jpg" alt="left image">
+      <div class="text-overlay5">epoch 4</div>
+    </div>
+
+    <div class="image-wrapper5">
+      <img src="results/part1/fox_0.01_50_mse_mse_plateau/50.jpg" alt="left image">
+      <div class="text-overlay5">epoch 50 (final)</div>
+    </div>
+  </div>
+
+  Compare the epoch50 result with raw image: (PSNR = 26.74) <br>
+  <img src="images/report/part1.png" alt="train_iter" width="1200" height="400">
+
+  <h3>1.5 Try to reconstruct another image with same model:</h3>
+  Here I only show the PSNR of image during training. (train_loss and val_loss can be viewed in logs/part1)<br>
+  <img src="images/report/GGBOND_PSNR.png" alt="psnr" width="800" height="400">
+
+  Reconstruct result after epoch1,2,3,4 and 50(final results):<br>
+  <div class="image-container5">
+    <div class="image-wrapper5">
+      <img src="results/part1/GGBOND_0.01_50_mse_mse_plateau/1.jpg" alt="left image">
+      <div class="text-overlay5">epoch 1</div>
+    </div>
+    
+    <div class="image-wrapper5">
+      <img src="results/part1/GGBOND_0.01_50_mse_mse_plateau/2.jpg" alt="left image">
+      <div class="text-overlay5">epoch 2</div>
+    </div>
+
+    <div class="image-wrapper5">
+      <img src="results/part1/GGBOND_0.01_50_mse_mse_plateau/3.jpg" alt="left image">
+      <div class="text-overlay5">epoch 3</div>
+    </div>
+
+    <div class="image-wrapper5">
+      <img src="results/part1/GGBOND_0.01_50_mse_mse_plateau/5.jpg" alt="left image">
+      <div class="text-overlay5">epoch 4</div>
+    </div>
+
+    <div class="image-wrapper5">
+      <img src="results/part1/GGBOND_0.01_50_mse_mse_plateau/50.jpg" alt="left image">
+      <div class="text-overlay5">epoch 50 (final)</div>
+    </div>
+  </div>
+
+  Compare the epoch50 result with raw image: (PSNR = 35.68) <br>
+  <img src="images/report/GGBOND_RE.png" alt="train_iter" width="800" height="600">
+
+  <h2>Part2: Fit a Neural Radiance Field from Multi-view Images</h2>
+  <h3>2.1 Create Rays from Cameras</h3>
+  This part is mainly about some mathematical operations in numpy, I just followed <br>
+  the instructions in webpage. (more details can be checked in code.ipynb)
+
+  <h3>2.2-3 Sampling and visualizing the results</h3>
+  batch_size: 10k <br>
+  n_samples: 64 <br>
+  near: 2.0 <br>
+  far: 6.0 <br><br>
+  In sampling, I chose to flatten all pixels from all images and do a <br>
+  global sampling once to get batch_size rays from all images. <br>
+  Below, I have separately presented the sampling results with perturbation added in the training mode <br>
+  and the sampling results with uniform sampling in the inference mode. By combining the zoomed-in images, <br>
+  the effect of perturbation can be observed. <br>
+
+  <br>(1) 100 rays samples with perturb: (during training)<br><br>
+  <div class="image-container">
+    <div class="image-wrapper">
+      <img src="images/report/perturb.png" alt="self image">
+      <div class="text-overlay">perturb samples</div>
+    </div>
+    
+    <div class="image-wrapper">
+      <img src="images/report/perturb_zoom.png" alt="cv2 image">
+      <div class="text-overlay">Zoom</div>
+    </div>
+  </div>
+
+  <br>(2) 100 rays samples without perturb: (during inference)<br><br>
+  <div class="image-container">
+    <div class="image-wrapper">
+      <img src="images/report/without_turb.png" alt="self image">
+      <div class="text-overlay">uniform sampling</div>
+    </div>
+    
+    <div class="image-wrapper">
+      <img src="images/report/without_turb_zoom.png" alt="cv2 image">
+      <div class="text-overlay">Zoom</div>
+    </div>
+  </div>
+
+  <h3>2.4 Build the Network:</h3>
+  Use torchsummary to check to MLP_3D model: <br><br>
+  <img src="images/report/MLP_3D.png" alt="MLP_3D" width="600" height="600">
+
+  <h3>2.5 Hyperparameters Chosen for Training</h3>
+  <img src="images/report/hyper_part2.png" alt="hyper" width="600" height="600">
+  <br>
+  (1) learning_rate: 0.01 <br>
+  (2) batch_size: 10k <br>
+  (3) n_samples: 64 <br>
+  (4) loss_fn: MSE <br>
+  (5) optimizer: Adam <br>
+  (6) scheduler: ReduceLROnPlateau <br>
+  (7) perturb: True <br>
+  (8) val metrics: PSNR <br>
+
+  <h3>2.6 Train processing</h3>
+  Train the MLP_3D in 30 epochs: <br>
+  (1) train loss in iterations: <br>
+  <img src="images/report/part2_train_loss_iter.png" alt="train_iter" width="800" height="400">
+  <br>
+  (2) train and val loss in epochs: <br>
+  <div class="image-container">
+    <div class="image-wrapper">
+      <img src="images/report/part2_train_loss_epoch.png" alt="self image">
+    </div>
+    
+    <div class="image-wrapper">
+      <img src="images/report/part2_test_loss_epoch.png" alt="cv2 image">
+    </div>
+  </div>
+  <br>
+  (3) PSNR (compute PSNR in whole image) <br>
+  (I forgot to pass param epoch to SummaryWriter, so psnr wasn't recorded in tensorboard...)<br>
+  <img src="logs/part2/256_10000_64_0.01_30_plateau_30_perturb/line_plot.png" alt="train_iter" width="800" height="400">
+
+  <h3>2.7 Show the render results</h3>
+  (1) Compare the predict results with ground truth in "images_val": <br><br>
+  <img src="images/report/compare.png" alt="compare" width="800" height="400"><br><br>
+
+  (2) Some middle results on val dataset during training: <br>
+  <img src="results/details/d1.png" alt="compare" width="1500" height="300"> <br>
+  <img src="results/details/d2.png" alt="compare" width="1500" height="300"> <br>
+
+  <br><br>(3) predict on images_test:<br><br>
+  <img src="images/report/test_predict.png" alt="compare" width="1200" height="400"> <br><br>
+
+  Some details: <br><br>
+  [1] No.17 in test dataset: <br>
+  <img src="results/details/d3.png" alt="compare" width="400" height="400"><br><br>
+  [2] No.37 in test dataset: <br>
+  <img src="results/details/d4.png" alt="compare" width="400" height="400"><br><br>
+
+  <br><br>(3) spherical rendering of the lego video:<br><br>
+  (If gif is not played in loop due to some reasons, please refresh the webpage to play it again) <br><br>
+  <img src="lego_video.gif" alt="compare" width="200" height="200" loop autoplay>
+
+</html>

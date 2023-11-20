@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html>
+
+<style>
+    .small-image {
+        max-width: 1000px; 
+        max-height: 500px; 
+    }
+
+    .mid_image {
+        max-width: 1000px; 
+        max-height: 800px;
+    }
+
+    .image-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        grid-gap: 10px;
+        max-width: 800px;
+        margin: 0 auto;
+    }
+
+    .image-grid img {
+        width: 100%;
+        height: auto;
+        object-fit: cover;
+    }
+
+    .image-grid .caption {
+        text-align: center;
+        font-size: 24px;
+        font-weight: bold;
+    }
+    
+    .my-text {
+        font-size: 32px;
+    }
+
+    .image-container2 {
+        display: flex;
+    }
+
+    .image-container2 img {
+        width: 50%;
+        height: auto;
+    }
+
+    .image-container3 {
+        display: flex;
+    }
+
+    .image-container3 img {
+        width: 33.33%;
+        height: auto;
+    }
+
+    .image-container4 {
+        display: flex;
+    }
+
+    .image-container4 img {
+        width: 25%;
+        height: auto;
+    }
+
+</style>
+
+</style>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Experiment Report</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+
+        h1 {
+            color: #333;
+        }
+
+        h2 {
+            color: #666;
+            margin-bottom: 10px;
+        }
+
+        h3 {
+            color: #999;
+            margin-bottom: 5px;
+        }
+
+        p {
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Project2 Report: Fun with Filters and Frequencies!</h1>
+
+    <h2>0. Student Information</h2>
+    <p>
+        Name: Yuanteng Chen <br>
+        Cal ID: 3039725444
+    </p>
+
+    
+    <h2>1. Environment Setup</h2>
+    <div style="background-color: #FFFFCC; padding: 10px;">
+        In experiment, I use Python 3.7 and OpenCV 4.5.1 for image processing: <br>
+        other repo: <br>
+        matplotlib, skimage
+    </div>
+
+    <h2>2. Part1: Fun with Filters</h2>
+    <h3>2.1-Part 1.1: Finite Difference Operator</h3>
+
+    Left:  raw image: cameraman.png <br>
+    Mid:   gradient magnitude image by convolving the raw image with finite difference operators D_x and D_y <br>
+    Right: edge image got by setting threshold = 0.10 <br><br>
+
+    <div class="image-container3">
+        <img src="data/cameraman.png" alt="raw image">
+        <img src="result/part1.1/gradient_manitude_image.jpg" alt="gradient">
+        <img src="result/part1.1/edge_image.jpg" alt="edge">
+    </div>
+
+    <br>
+    Here I also compare different results by setting threshold = 0.1, 0.15, 0.20, 0.25 <br>
+
+    <div class="image-container4">
+        <img src="result/part1.1/edge_0_10_image.jpg" alt="threshold=0.10">
+        <img src="result/part1.1/edge_0_15_image.jpg" alt="threshold=0.15">
+        <img src="result/part1.1/edge_0_20_image.jpg" alt="threshold=0.20">
+        <img src="result/part1.1/edge_0_25_image.jpg" alt="threshold=0.25">
+    </div>
+
+    <br>
+    <div style="background-color: #FFFFCC; padding: 10px;">
+    From the above comparison results, it can be observed that when the threshold is set to 0.1, <br>
+    the noise on the person is already minimal, while the noise on the ground is more evident. <br>
+    As the threshold gradually increases to 0.25, the noise on the ground also decreases gradually. <br>
+    </div>
+
+    <h3>2.2-Part 1.2: Derivative of Gaussian (DoG) Filter</h3>
+    <p>
+        Set ksize = 5 and sigma = 1 <br>
+        I apply gaussian convolution before getting gradient image. <br>
+    </p>
+
+    <div class="image-container3">
+        <img src="data/cameraman.png" alt="raw image">
+        <img src="result/part1.2/blurred_gradient_manitude_image.jpg" alt="blurred_gradient">
+        <img src="result/part1.2/blurred_edge_image.jpg" alt="blurred_edge">
+    </div>
+    <br>
+    <div style="background-color: #FFFFCC; padding: 10px;">
+        From the above comparison results, it can be observed that after applying gaussian convolution, <br>
+        there is less noise in both gradient manitude image and edge image. <br>
+        And new edge image is better than origin edge image with threshold=0.25 as you can see the outline of the person is more pronounced. <br>
+    </div>
+
+
+    <h2>3. Part2: Fun with Frequencies!</h2>
+    <h3>3.1-Part 2.1: Image "Sharpening"</h3>
+
+    <p>
+        Set ksize = 12 and sigma = 2 <br>
+        sharpen = raw + beta * (raw - blurred) <br>
+        from left to right: <br>
+        1: raw image <br>
+        2: blurred image <br>
+        3: high frequency <br>
+        4: sharpen image (simply set beta = 1) <br>
+    </p>
+
+    
+    <div class="image-container4">
+        <img src="data/taj.jpg" alt="raw image">
+        <img src="result/part2.1/blurred_image.jpg" alt="blurred image">
+        <img src="result/part2.1/high_freq.jpg" alt="high frequancy">
+        <img src="result/part2.1/sharpen_image.jpg" alt="sharpen image">
+    </div>
+
+    <p> Evaluation image: </p>
+    Set ksize = 30 , sigma = 5 and beta = 1<br>
+    <div class="image-container4">
+        <img src="data/iceland.jpg" alt="raw image">
+        <img src="result/part2.1/blurred_iceland.jpg" alt="blurred image">
+        <img src="result/part2.1/high_freq_iceland.jpg" alt="high frequancy">
+        <img src="result/part2.1/sharpen_image_iceland.jpg" alt="sharpen image">
+    </div>
+
+
+    <h3>3.2-Part 2.2: Hybrid Images</h3>
+
+    <p>
+        First, when I tried to use starter code to align hybrid images, I found there were <br>
+        some mistakes when the distance between two points in the first image is less than the <br>
+        distance of the points of second  image. After debugging, I found this bug is due to <br>
+        channel change when using api sktr.rescale. <br><br>
+        The solution is to set the parameter multichannel to True: <br><br>
+        <img src="source/debug.png" alt="blurred image">
+    </p>
+
+    <h4>Part 2.2.1: try to hybrid dog and cat --> docat</h4>
+
+    <p>raw images: dog and cat</p>
+    <div class="image-container2">
+        <img src="data/dog.bmp" alt="dog">
+        <img src="data/cat.bmp" alt="cat">
+    </div>
+
+    <p>
+        low frequency of dog and high frequency of cat: <br>
+        (set ksize = 40 and sigma = 10 for both dog and cat)
+    </p>
+
+    <div class="image-container2">
+        <img src="result/part2.2/blurred_dog.jpg" alt="blurred_dog">
+        <img src="result/part2.2/high_cat.jpg" alt="high freq of cat">
+    </div>
+
+    <p>
+        frequency analysis: <br>
+    </p>
+
+    <div class="image-container2">
+        <img src="result/part2.2/low_frequency_analysis.jpg" alt="low_frequency">
+        <img src="result/part2.2/high_frequency_analysis.jpg" alt="high_frequency">
+    </div>
+
+    <p>
+        hybrid result and frequency analysis: <br>
+    </p>
+
+    <div class="image-container2">
+        <img src="result/part2.2/hybrid_docat.jpg" alt="hybrid">
+        <img src="result/part2.2/hybrid.jpg" alt="hybrid frequency">
+    </div>
+
+    <h4>Part 2.2.2: try another hybrid</h4>
+
+    <p>
+        images of Trump and Biden: <br>
+    </p>
+
+    <div class="image-container2">
+        <img src="data/Trump1.jpg" alt="Trump">
+        <img src="data/Biden1.jpg" alt="Biden">
+    </div>
+
+    <div style="background-color: #ffffccda; padding: 10px;">
+        First, we need to align Trump and Biden by align_image_code although it <br>
+        was difficult because of the expression of Trump in Jail portrait.<br>
+        I use the location of eyes as the standard of alignment. <br>
+    </div>
+
+    <div class="image-container2">
+        <img src="data/aligned_Trump.jpg" alt="aligned_Trump">
+        <img src="data/aligned_Biden.jpg" alt="aligned_Biden">
+    </div>
+
+    <p>
+        Set ksize = 42 , sigma = 7 and (alpha = 0.8 , beta = 1.8): <br>
+        Hybrid result and its frequency analysis:
+    </p>
+
+    <div style="background-color: #ffffccda; padding: 10px;">
+        The reason why I set alpha = 0.8 with beta = 1.8 but not simply 1.0 is that <br>
+        Trump's facial features are too prominent, <br>
+        and if the beta value is too small, it will still look more like Trump from up close, <br>
+        and you can see from the chart that even if the alpha and beta are set to 0.8 and 1.8, <br>
+        his logo blond hair and eyebrows are still very eye-catching.
+    </div> 
+
+    <div class="image-container2">
+        <img src="result/part2.2/hybird_TB.jpg" alt="hybrid TB">
+        <img src="result/part2.2/TB_hybrid_freq.jpg" alt="TB hybrid freq">
+    </div>
+
+    <p>
+        See from a distance. <br>
+    </p>
+
+    <img src="result/part2.2/long_distance.png" alt="long distance">
+
+    <h3>3.3-Part 2.3: Gaussian and Laplacian Stacks</h3>
+
+    <p>
+        Set ksize = 21 and sigma = 4, <br><br>
+        4-level Gaussian stack: <br>
+    </p>
+
+    <img src="result/part2.3/stack.png" alt="stack">
+
+    <p>
+        Set ksize = 21 and sigma = 4, <br><br>
+        4-level Laplacian stack: <br>
+    </p>
+
+    <img src="result/part2.3/L_stack.png" alt="stack laplacian">
+
+    <h3>3.4-Part 2.4: Multiresolution Blending (a.k.a. the oraple!)</h3>
+    <h4>oraple</h4>
+    <img src="result/part2.4/oraple.jpg" alt="oraple">
+
+    <h4>multiresolution blending examples</h4>
+    <h5>Jerry and Patrick Star </h5>
+    <p>raw images: </p>
+
+    <div class="image-container2">
+        <img src="data/self1_left.JPG" alt="Jerry">
+        <img src="data/self1_right.JPG" alt="Patrick Star">
+    </div>
+
+    <p>
+        blending result: <br>
+    </p>
+
+    <img src="result/part2.4/result1.jpg" alt="JeStar">
+
+</body>
+
+</html>

@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Experiment Report</title>
+
+  <style>
+    .image-container {
+      display: flex;
+      justify-content: space-between;
+    }
+    
+    .image-container .image-wrapper {
+      position: relative;
+      width: 50%;
+    }
+    
+    .image-container .image-wrapper img {
+      max-width: 100%;
+      height: auto;
+    }
+    
+    .image-container .image-wrapper .text-overlay {
+      position: absolute;
+      top: 0px;
+      left: 0px;
+      color: white;
+      font-size: 12px;
+      font-weight: bold;
+      background-color: rgba(0, 0, 0, 0.7);
+      padding: 10px;
+    }
+
+    .image-container3 {
+      display: flex;
+      justify-content: space-between;
+    }
+    
+  .image-container3 .image-wrapper3 {
+      position: relative;
+      width: 33%;
+  }
+    
+  .image-container3 .image-wrapper3 img {
+      max-width: 100%;
+      height: auto;
+  }
+    
+  .image-container3 .image-wrapper3 .text-overlay3 {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      color: white;
+      font-size: 10px;
+      font-weight: bold;
+      background-color: rgba(0, 0, 0, 0.7);
+      padding: 10px;
+  }
+
+    .image-container4 {
+        display: flex;
+        justify-content: space-between;
+      }
+      
+    .image-container4 .image-wrapper4 {
+        position: relative;
+        width: 25%;
+    }
+      
+    .image-container4 .image-wrapper4 img {
+        max-width: 100%;
+        height: auto;
+    }
+      
+    .image-container4 .image-wrapper4 .text-overlay4 {
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        color: white;
+        font-size: 24px;
+        font-weight: bold;
+        background-color: rgba(0, 0, 0, 0.7);
+        padding: 10px;
+    }
+
+    .image-container5 {
+      display: flex;
+      justify-content: space-between;
+    }
+    
+  .image-container5 .image-wrapper5 {
+      position: relative;
+      width: 20%;
+  }
+    
+  .image-container5 .image-wrapper5 img {
+      max-width: 100%;
+      height: auto;
+  }
+    
+  .image-container5 .image-wrapper5 .text-overlay5 {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      color: white;
+      font-size: 24px;
+      font-weight: bold;
+      background-color: rgba(0, 0, 0, 0.7);
+      padding: 10px;
+  }
+
+    img.gif-image {
+        max-width: 88%;
+        height: auto;
+        display: block;
+        margin: 0 auto;
+    }
+
+    pre {
+      background-color: #f4f4f4;
+      padding: 10px;
+      border-radius: 5px;
+      overflow: auto;
+    }
+
+    code {
+      font-family: Consolas, Monaco, Courier, monospace;
+    }
+
+  </style>
+
+</head>
+<body>
+  <p>Experiment: Final project2: Gradient Domain Fushion</p>
+  <p>Name: Yuanteng Chen</p> 
+  <p>ID: 3039725444</p>
+
+  <h1>1.Experiment Report</h1>
+
+  <h2>1.1 Toy Problem</h2>
+
+    Compute the x and y gradients from an image s, then use all the gradients,<br>
+    plus one pixel intensity, to reconstruct an image v. <br><br>
+
+    Reconstruct the image provided: <br><br>
+    <img src="images/toy_problem.png" alt=bilinear" width="800" height="400">
+
+    <br><br>
+    Reconstruct another image from Set14 dataset: bridge.jpg: <br><br>
+    <img src="images/toy_problem_self.png" alt=bilinear" width="800" height="400">
+
+  <h2>1.2 Poisson Blending</h2>
+
+  In this part, we want to blend part of original image (penguin part) into target image: <br><br>
+  <div class="image-container">
+    <div class="image-wrapper">
+      <img src="samples/penguin.jpg" alt="self image">
+      <div class="text-overlay">original image</div>
+    </div>
+    
+    <div class="image-wrapper">
+      <img src="samples/im3.jpg" alt="cv2 image">
+      <div class="text-overlay">target image</div>
+    </div>
+  </div>  
+
+  <h3>1.2.1 get mask of original image</h3>
+  To do poisson blending, we need to get the mask of original image(we don't want to blend the whole original image into target image, but just part of it) <br>
+  So we should get the mask of the part we want to blend into target image:
+
+    <pre><code>
+  def draw_rectangle(event, x, y, flags, param):
+      global ix, iy, drawing, rect_start, image_copy
+  
+      if event == cv2.EVENT_LBUTTONDOWN:
+          drawing = True
+          ix, iy = x, y
+          rect_start = (x, y)
+  
+      elif event == cv2.EVENT_LBUTTONUP:
+          drawing = False
+          cv2.rectangle(mask, rect_start, (x, y), (255), -1)
+  
+      elif event == cv2.EVENT_MOUSEMOVE:
+          if drawing:
+              image_copy = np.copy(image)
+              cv2.rectangle(image_copy, rect_start, (x, y), (0, 0, 255), 2)
+    </code></pre>
+
+  Mask of original image: <br><br>
+  <img src="images/masks.png" alt=bilinear" width="800" height="500">
+
+  <h3>1.2.2 get positions of target images</h3>
+  After 1.2.1, we have got the mask of original image, now we need to define the positions of target image where we want to put penguin part into it: <br>
+  As there can be more than one target position, we need to record each position: <br>
+
+    <pre><code>
+  def mouse_callback(event, x, y, flags, param):
+      # Left mouse button pressed
+      if event == cv2.EVENT_LBUTTONDOWN:
+          # Record point coordinates
+          points.append((x, y))
+  
+          # Draw rectangle on the image
+          if len(points) >= 1:
+              rect_start = points[-1]
+              cv2.rectangle(image, rect_start, (rect_start[0] + width, rect_start[1] + height), (0, 0, 255), 2)
+  
+          # Draw marker number
+          for i, point in enumerate(points):
+              cv2.putText(image, str(i + 1), (point[0], point[1]-10), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 3)
+  
+          # Display the updated image with rectangles and markers
+          cv2.imshow("Image", image)
+    </code></pre>
+
+  As shown below, I choose 4 target positions and record them on the target image: <br><br>
+  <img src="images/targets.png" alt=bilinear" width="800" height="300">
+  <img src="images/target_image.png" alt=bilinear" width="800" height="600">
+
+  <h3>1.2.3 Implement poisson blending</h3>
+
+  Core loop: <br><br>
+    <pre><code>
+  for shift in shifts:
+    
+      A,b = init_equation(num_pixel=num_pixel)
+      
+      rows, cols = np.where(mask == 1)
+      shift_x, shift_y = shift
+      
+      row_index = 0
+      for i in range(num_pixel):
+          x, y = rows[i], cols[i]
+          
+          s_neighbors = get_neighbors(x, y, img_s.shape, "four")
+          t_neighbors = get_neighbors(x+shift_x, y+shift_y, img_t.shape, "four")
+          assert(len(s_neighbors) == len(t_neighbors))
+          # neighbors are tuple list
+          # [(x1,y1),(x2,y2),(x3,y3),(x4,y4)]
+          for i in range(len(s_neighbors)):
+              n_x_s, n_y_s = s_neighbors[i]
+              n_x_t, n_y_t = t_neighbors[i]
+              # set value in diagonal to 1
+              A[row_index, index_mask[x][y]] = 1
+              # b[row_index] = Si - Sj
+              b[row_index] = img_s[x][y] - img_s[n_x_s][n_y_s]
+              
+              if(index_mask[n_x_s][n_y_s] == -1):
+                  # neighbor is out of foreground
+                  b[row_index] += img_t[n_x_t][n_y_t]
+              else:
+                  A[row_index, index_mask[n_x_s][n_y_s]] = -1
+                  
+              row_index += 1
+          
+      v = solve_equation(A, b)
+      v_stack.append(v)
+    </code></pre>
+  Here each shift represents one target position, as we want to blend the penguin part into four different target positions in target image, <br>
+  I need to record the shifts from penguin part to each target position. <br><br>
+
+  Blending result: <br><br>
+
+  <img src="images/result1.png" alt=bilinear" width="800" height="600">
+  <img src="images/result11.png" alt=bilinear" width="1200" height="400">
+
+
+  <h2>1.3 Bells & Whistles</h2>
+  <h3>1.3.1 Mixed Gradients</h3>
+
+  The only difference between Poisson blending and Mixed Gradients is that in Mixed Gradients we <br>
+  use the gradient in source or target with the larger magnitude as the guide, rather than the source gradient: <br>
+  <body>
+    <pre><code>
+  ds = abs(img_s[x][y] - img_s[n_x_s][n_y_s])
+  dt = abs(img_t[x+shift_x][y+shift_y] - img_t[n_x_t][n_y_t])
+      
+  if(ds > dt):
+      b[row_index] = img_s[x][y] - img_s[n_x_s][n_y_s]
+  else:
+      b[row_index] = img_t[x+shift_x][y+shift_y] - img_t[n_x_t][n_y_t]
+    </code></pre>
+  </body>
+
+  Results of Mixed Gradient blending: <br><br>
+  <img src="images/result2.png" alt=bilinear" width="800" height="600">
+
+  <br> We can compare it with Poisson Blending: <br><br>
+  <div class="image-container">
+    <div class="image-wrapper">
+      <img src="images/result1.png" alt="self image">
+      <div class="text-overlay">Poisson Blending</div>
+    </div>
+    
+    <div class="image-wrapper">
+      <img src="images/result2.png" alt="cv2 image">
+      <div class="text-overlay">Mixed Gradient</div>
+    </div>
+  </div>
+
+</body>
+</html>
