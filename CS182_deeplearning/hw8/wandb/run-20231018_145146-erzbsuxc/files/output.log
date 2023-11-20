@@ -1,0 +1,10 @@
+
+Downloading https://www.cs.toronto.edu/~kriz/cifar-10-python.tar.gz to ./data\cifar-10-python.tar.gz
+Files already downloaded and verified
+Files already downloaded and verified
+[1,   200] loss: 2.25610 accuracy: 15.78125
+[1,   400] loss: 1.90479 accuracy: 29.90625
+[1,   600] loss: 1.69474 accuracy: 37.71875
+[2,   200] loss: 1.48649 accuracy: 45.19531
+[2,   400] loss: 1.43179 accuracy: 48.33594
+[2,   600] loss: 1.38526 accuracy: 50.20312
